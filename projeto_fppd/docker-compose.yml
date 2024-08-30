@@ -1,0 +1,27 @@
+services:
+  master:
+    build:
+      context: .
+      dockerfile: apache-beam-nemo.dockerfile  # Caminho para o Dockerfile
+    container_name: master
+    environment:
+      - NODE_TYPE=master
+    ports:
+      - "8080:8080"
+    networks:
+      - beam-cluster
+
+  worker:
+    build:
+      context: .
+      dockerfile: apache-beam-nemo.dockerfile
+    environment:
+      - NODE_TYPE=worker
+    networks:
+      - beam-cluster
+    deploy:
+      replicas: 2  # Número de workers
+
+networks:
+  beam-cluster:
+    driver: bridge
